@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+
+
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f9f9f9;
+    padding: 0;
+    min-width: 1200px; /* 设置页面最小宽度 */
+    
+    margin: 0 auto;
+}
+header {
+            background-color: #007d27;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            
+        }
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+#quiz-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 30px auto;
+    width: 80%;
+    min-width: 800px;
+    max-width: 800px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#countdown {
+    font-size: 2rem;
+    color: #ff5722;
+    margin: 20px 0;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#questions {
+    text-align: left;
+    margin-top: 20px;
+    display: block;
+    visibility: visible;
+    
+}
+
+.question {
+    margin-bottom: 20px;
+}
+
+.options {
+    margin-left: 20px;
+}
+
+.results {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+#leaderboard {
+    position: fixed; /* 悬浮定位 */
+    top: 50px; /* 距离页面顶部 20px */
+    right: 40px; /* 距离页面右侧 20px */
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* 确保悬浮模块在最上层 */
+}
+
+#leaderboard h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+#leaderboard-list li {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #555;
+}
+#exam-intro{
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 800px;
+    max-width: 800px;
+}
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科普知识竞赛</title>
+</head>
+<body>
+    <header>
+        <h1>这里放图片和logo</h1>
+    </header>
+
+    <!-- 返回主页按钮 -->
+<div style="width: 80%; margin: 20px auto; text-align: left;">
+    <button id="back-to-home" style="padding: 5px 10px; font-size: 14px; background-color: #007d27; color: white; border: none; border-radius: 5px; cursor: pointer;">&lt; 返回主页</button>
+</div>
+
+    <!-- 考试介绍模块 -->
+    <div id="exam-intro" >
+        <h2 style="margin: 0; font-size: 24px; color: #333;">生态知识</h2>
+        <p style="margin: 10px 0; font-size: 14px; color: #888;">更新于 2025-05-12 来自 课程小组</p>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+            <img src="img/icon/考试.png" alt="考试图标" style="width: 20px; height: 15px; ">
+            <span id="exam-notice" style="font-size: 16px; color: #555; cursor: pointer;">答题须知</span>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <span style="font-size: 16px; color: #555; margin-right: 10px;">总分</span>
+                <span style="font-size: 24px; font-weight: bold; color: #007d27;">100</span>
+                
+            </div>
+        </div>
+    </div>
+    <!-- 考试模块 -->
+    <div id="quiz-container" style="display: flex; justify-content: space-between;">
+        <div style="flex: 1;">
+            <h1>科普知识竞赛</h1>
+            <div id="countdown">你有60秒的时间作答</div>
+            <button id="start-button">开始答题</button>
+            <div id="quiz" style="display: none;">
+                <div id="questions"></div>
+                <button id="submit-button" style="display: none;">提交答案</button>
+                <div id="result" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <!-- 排行榜模块 -->
+    <div id="leaderboard" style="width: 300px; border-radius: 5px;">
+        <p id="current-date" style="text-align: center; font-size: 14px; color: #888;"></p> <!-- 日期容器 -->
+        <h2>排行榜</h2>
+        <ul id="leaderboard-list" style="list-style: none; padding: 0;">
+        </ul>
+    </div>
+
+    <!-- 考试须知弹窗 -->
+    <div id="modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000; padding: 20px;">
+        <h3 style="margin-top: 0; font-size: 18px; color: #333;">答题须知</h3>
+        <p style="font-size: 14px; color: #555;">1. 请在规定时间内完成答题。<br>2. 每题只能选择一个答案。<br>3. 没有全部完成不能提交。<br>4. 答题完毕后将更新排行榜。</p>
+        <button id="close-modal" style="margin-top: 10px; padding: 5px 10px; background-color: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer;">关闭</button>
+    </div>
+    <div id="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+
+    <script>
+        const countdownElement = document.getElementById("countdown");
+        const startButton = document.getElementById("start-button");
+        const quizElement = document.getElementById("quiz");
+        const questionsElement = document.getElementById("questions");
+        const submitButton = document.getElementById("submit-button");
+        const resultElement = document.getElementById("result");
+
+        // 定义全局变量
+        let questions = [];
+        let timer;
+        let selectedQuestions = [];
+        let isQuizSubmitted = false; // 标志变量，判断是否已提交答案
+        let playerName = ""; // 存储玩家姓名
+
+        // 加载题目数据
+        fetch("json/questions-data.json")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                questions = data;
+                console.log("Questions loaded successfully:", questions); // 调试：打印加载的题目数据
+            })
+            .catch(error => {
+                console.error("Failed to load questions:", error); // 调试：打印加载错误
+            });
+
+        // 开始答题按钮点击事件
+        startButton.addEventListener("click", () => {
+            // 弹出输入框获取用户姓名
+            playerName = prompt("请输入您的姓名：");
+            if (!playerName || playerName.trim() === "") {
+                alert("姓名不能为空，请重新输入！");
+                return; // 阻止继续操作
+            }
+
+            startButton.style.display = "none";
+            quizElement.style.display = "block"; // 显示答题区域
+
+            
+            showQuiz(); // 显示随机 10 道题目
+
+            
+        });
+
+        
+
+        // 显示随机 10 道题目
+        function showQuiz() {
+            countdownElement.textContent = "60"; // 设置答题倒计时为 60 秒
+            quizElement.style.display = "block";
+            submitButton.style.display = "block";
+
+            // 随机选择 10 道题目
+            selectedQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+            // 渲染随机题目
+            selectedQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("question");
+                questionDiv.innerHTML = `
+                    <p>${index + 1}. ${q.question}</p>
+                    <div class="options">
+                        ${q.options
+                            .map(
+                                option => `
+                            <label>
+                                <input type="radio" name="question-${index}" value="${option}">
+                                ${option}
+                            </label>
+                        `
+                            )
+                            .join("")}
+                    </div>
+                `;
+                questionsElement.appendChild(questionDiv);
+            });
+
+            // 开始答题倒计时，倒计时结束后自动提交答案
+            startCountdown(60, () => {
+                if (!isQuizSubmitted) {
+                    submitAnswers(true); // 自动提交答案
+                }
+            });
+        }
+
+        // 提交答案
+        submitButton.addEventListener("click", () => submitAnswers(false));
+
+        function submitAnswers(isAutoSubmit = false) {
+            let allAnswered = true; // 标记是否所有题目都已回答
+            let score = 0;
+
+            selectedQuestions.forEach((q, index) => {
+                const selectedOption = document.querySelector(
+                    `input[name="question-${index}"]:checked`
+                );
+                if (!selectedOption) {
+                    allAnswered = false; // 如果有未回答的题目，设置为 false
+                } else if (selectedOption.value === q.answer) {
+                    score += 10; // 每题 10 分
+                }
+            });
+
+            if (!allAnswered && isAutoSubmit) {
+                alert("时间到！未完成的题目将不计分。"); // 自动提交时提示未完成的题目
+            } else if (!allAnswered && !isAutoSubmit) {
+                alert("请回答所有题目后再提交！"); // 手动提交时提示用户完成所有题目
+                return; // 阻止手动提交，但不停止倒计时
+            }
+
+            // 停止倒计时并显示成绩
+            clearInterval(timer); // 停止倒计时
+            isQuizSubmitted = true; // 标记为已提交答案
+            quizElement.style.display = "none";
+            submitButton.style.display = "none"; // 隐藏提交按钮
+            countdownElement.textContent = `你的得分是：${score} / 100`; // 替换倒计时为成绩
+            countdownElement.style.color = "green"; // 可选：将成绩文字设置为绿色
+
+            // 添加分数到排行榜
+            updateLeaderboard(playerName, score);
+        }
+
+        // 更新排行榜
+        function updateLeaderboard(name, score) {
+            const leaderboardList = document.getElementById("leaderboard-list");
+
+            // 获取当前排行榜数据
+            let leaderboardData = JSON.parse(localStorage.getItem("leaderboard")) || [];
+
+            // 添加新的记录
+            leaderboardData.push({ name, score });
+
+            // 按分数从高到低排序
+            leaderboardData.sort((a, b) => b.score - a.score);
+
+            // 保存到 localStorage
+            localStorage.setItem("leaderboard", JSON.stringify(leaderboardData));
+
+            // 更新排行榜显示
+            renderLeaderboard(name, score); // 传递最新的姓名和分数
+        }
+
+        // 渲染排行榜
+        function renderLeaderboard(latestName = "", latestScore = null) {
+            const leaderboardList = document.getElementById("leaderboard-list");
+            leaderboardList.innerHTML = ""; // 清空当前列表
+
+            // 获取排行榜数据
+            const leaderboardData = JSON.parse(localStorage.getItem("leaderboard")) || [];
+
+            // 找到最高分
+            const highestScore = Math.max(...leaderboardData.map(entry => entry.score));
+
+            // 渲染排行榜
+            leaderboardData.forEach(entry => {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `<strong>${entry.name}</strong> - ${entry.score} 分`;
+
+                // 如果是最新提交的成绩，添加 "（NEW）" 提示
+                if (entry.name === latestName && entry.score === latestScore) {
+                    listItem.innerHTML += ` <span style="color: red;">（NEW）</span>`;
+                }
+
+                // 如果是最高分，添加 "（TOP）" 提示
+                if (entry.score === highestScore) {
+                    listItem.innerHTML += ` <span style="color: green;">（TOP）</span>`;
+                }
+
+                leaderboardList.appendChild(listItem);
+            });
+        }
+
+        // 倒计时函数
+        function startCountdown(duration, callback) {
+            let time = duration;
+            countdownElement.textContent = time; // 初始化倒计时显示
+            console.log("Countdown started:", time); // 调试：打印倒计时开始
+
+            const countdownTimer = setInterval(() => {
+                if (isQuizSubmitted) {
+                    clearInterval(countdownTimer); // 如果已提交答案，停止倒计时
+                    return;
+                }
+
+                time--;
+                countdownElement.textContent = time; // 更新倒计时显示
+                console.log("Countdown:", time); // 调试：打印倒计时
+
+                if (time <= 0) {
+                    clearInterval(countdownTimer); // 停止倒计时
+                    console.log("Countdown ended."); // 调试：打印倒计时结束
+                    callback(); // 调用回调函数
+                }
+            }, 1000);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // 设置当前日期
+            const currentDateElement = document.getElementById("current-date");
+            const now = new Date();
+            const formattedDate = `截止当前日期：${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
+            currentDateElement.textContent = formattedDate;
+
+            // 默认排行榜数据
+            const defaultLeaderboard = [
+                { name: "张三", score: 90 },
+                { name: "李四", score: 80 },
+                { name: "王五", score: 70 }
+            ];
+
+            // 获取当前排行榜数据
+            let leaderboardData = JSON.parse(localStorage.getItem("leaderboard")) || [];
+
+            // 合并默认数据和现有数据，并去重
+            leaderboardData = [...defaultLeaderboard, ...leaderboardData];
+
+            // 去重：根据姓名和分数唯一标识
+            leaderboardData = leaderboardData.filter(
+                (entry, index, self) =>
+                    index === self.findIndex(e => e.name === entry.name && e.score === entry.score)
+            );
+
+            // 保存到 localStorage
+            localStorage.setItem("leaderboard", JSON.stringify(leaderboardData));
+
+            // 渲染排行榜
+            renderLeaderboard();
+        });
+
+        document.getElementById("exam-notice").addEventListener("click", () => {
+            document.getElementById("modal").style.display = "block";
+            document.getElementById("modal-overlay").style.display = "block";
+        });
+
+        document.getElementById("close-modal").addEventListener("click", () => {
+            document.getElementById("modal").style.display = "none";
+            document.getElementById("modal-overlay").style.display = "none";
+        });
+
+        document.getElementById("modal-overlay").addEventListener("click", () => {
+            document.getElementById("modal").style.display = "none";
+            document.getElementById("modal-overlay").style.display = "none";
+        });
+
+        document.getElementById("back-to-home").addEventListener("click", () => {
+    window.location.href = "index.html"; // 跳转到主页
+});
+        
+    </script>
+    
+</body>
+</html>

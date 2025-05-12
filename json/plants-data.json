@@ -1,0 +1,58 @@
+[
+    {
+        "name": "积雪草",
+        "scientific_name": "Centella asiatica",
+        "features": "多年生草本植物，叶片圆形或肾形，边缘有锯齿。",
+        "location": "学校东侧花坛",
+        "image_url": "img/plant/exampleplant.jpg"
+    },
+    {
+        "name": "蜈蚣菊",
+        "scientific_name": "Sphagneticola",
+        "features": "多年生草本植物，花朵为黄色，呈舌状花序。",
+        "location": "学校南门绿化带",
+        "image_url": "img/plant/exampleplant.jpg"
+    },
+    {
+        "name": "鬼针草",
+        "scientific_name": "Bidens pilosa L.",
+        "features": "一年生草本植物，花朵为白色，果实有倒刺。",
+        "location": "学校操场周围",
+        "image_url": "img/plant/exampleplant.jpg"
+    },
+    {
+        "name": "蕨",
+        "scientific_name": "Pteridium aquilinum",
+        "features": "多年生蕨类植物，叶片羽状分裂，根状茎横走。",
+        "location": "学校北侧树林",
+        "image_url": "img/plant/exampleplant.jpg"
+    },
+    {
+        "name": "光萼含羞草",
+        "scientific_name": "Mimosa",
+        "features": "多年生草本植物，叶片对生，遇触碰会闭合。",
+        "location": "学校西侧草坪",
+        "image_url": "img/plant/exampleplant.jpg"
+    },
+    {
+        "name": "鸡眼藤",
+        "scientific_name": "Morinda",
+        "features": "多年生藤本植物，果实为橙色，叶片椭圆形。",
+        "location": "学校图书馆旁",
+        "image_url": "img/plant/exampleplant.jpg"
+    },
+    {
+        "name": "马缨丹",
+        "scientific_name": "Lantana camara",
+        "features": "多年生灌木植物，花朵多色，果实为黑色浆果。",
+        "location": "学校中心花园",
+        "image_url": "img/plant/exampleplant.jpg"
+    },
+    {
+        "name": "九里香",
+        "scientific_name": "Murraya exotica",
+        "features": "常绿灌木，花朵白色，芳香浓郁。",
+        "location": "学校行政楼前",
+        "image_url": "img/plant/exampleplant.jpg"
+    }
+]

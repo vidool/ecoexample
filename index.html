@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=width=device-width, initial-scale=1.0">
+    <title>校园生态网站主页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0 auto;
+            padding: 0;
+            background-color: #f5f5f5;
+            white-space: nowrap; /* 禁止换行 */
+            overflow-x: auto; /* 启用水平滚动条 */
+            min-width: 1200px; /* 设置页面最小宽度 */
+        }
+        header {
+            background-color: #007d27;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            
+        }
+        .maxwidth {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            
+        }
+        nav a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+        }
+        nav a:hover {
+            background-color: #575757;
+        }
+        .banner {
+            justify-content: space-around;
+        }
+        .slideshow-container {
+            position: relative;
+            max-width: 100%;
+            margin: auto;
+            overflow: hidden;
+            height: 300px; /* 调整高度 */
+        }
+        .slide {
+            display: none;
+            text-align: center;
+        }
+        .slide img {
+            width: 100%;
+            height: 100%; /* 确保图片适应高度 */
+            object-fit: cover; /* 保持图片比例 */
+        }
+        .caption {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+        .fade {
+            animation: fadeEffect 1.5s ease-in-out;
+        }
+        @keyframes fadeEffect {
+            from { opacity: 0.4; }
+            to { opacity: 1; }
+        }
+        /* 左右按钮样式 */
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 10px;
+            margin-top: -22px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .prev {
+            left: 0;
+            border-radius: 3px 0 0 3px;
+        }
+        .next {
+            right: 0;
+            border-radius: 0 3px 3px 0;
+        }
+        .prev:hover, .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+       
+        .content img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            bottom: 0;
+            width: 100%;
+        }
+        .extra-content {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            gap: 20px;
+        }
+        .extra-section {
+            flex: 1;
+            text-align: center;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #fff;
+        }
+        .extra-section h3 {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+        .more-link {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #007d27;
+            text-decoration: none;
+        }
+        .more-link:hover {
+            text-decoration: underline;
+        }
+        .image-container {
+            margin: 10px 0;
+        }
+        .image-container img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .navigation-section {
+            text-align: center;
+            padding: 5px 20px;
+            background-color: #f5f5f5;
+        }
+        .navigation-section h2 {
+            font-size: 24px;
+            color: #007d27;
+            margin-bottom: 5px;
+        }
+        .navigation-section p {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 20px;
+        }
+        .navigation-icons {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+        }
+        .nav-item {
+            text-align: center;
+        }
+        .nav-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+            padding: 10px;
+        }
+        .nav-item p {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #007d27;
+        }
+        .nav-item a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .nav-item a:hover p {
+            text-decoration: underline;
+        }
+        .news-section {
+            padding: 20px;
+            background-color: #fff;
+        }
+        .news-section h2 {
+            font-size: 24px;
+            color: #007d27;
+            margin-bottom: 20px;
+            margin-top: 0px;
+            text-align: center;
+        }
+        .news-list {
+            flex-direction: column;
+            gap: 10px;
+            white-space: nowrap; /* 禁止换行 */
+        }
+        .news-item {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .news-item:last-child {
+            border-bottom: none;
+        }
+        .news-item a {
+            text-decoration: none;
+            color: #333;
+        }
+        .news-item a:hover h3 {
+            color: #007d27;
+        }
+        .news-item h3 {
+            font-size: 16px;
+            margin: 0;
+        }
+        .news-item p {
+            font-size: 14px;
+            color: #888;
+            margin: 5px 0 0;
+        }
+        .notice-section {
+            padding: 20px;
+            background-color: #fff;
+        }
+        .notice-section h2 {
+            font-size: 24px;
+            color: #007d27;
+            margin-bottom: 20px;
+            margin-top: 0px;
+            text-align: center;
+        }
+        .notice-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-direction: column;
+            gap: 10px;
+            white-space: nowrap; /* 禁止换行 */
+        }
+        .notice-item {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .notice-item:last-child {
+            border-bottom: none;
+        }
+        .notice-item a {
+            text-decoration: none;
+            color: #333;
+        }
+        .notice-item a:hover h3 {
+            color: #007d27;
+        }
+        .notice-item h3 {
+            font-size: 16px;
+            margin: 0;
+        }
+        .notice-item p {
+            font-size: 14px;
+            color: #888;
+            margin: 5px 0 0;
+        }
+        .plants-gallery {
+            margin: 20px;
+        }
+        .plants-container {
+            display: flex;
+            gap: 30px;
+            justify-content: space-between;
+            white-space: nowrap; /* 禁止换行 */
+        }
+
+        .plant-item {
+            flex: 1 1 calc(20% - 20px); /* 每行显示 5 个 */
+            max-width: calc(20% - 20px);
+            text-align: center;
+        }
+
+        .plant-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .plant-item p {
+            font-size: 14px;
+            color: #333;
+            margin-top: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* 超出部分显示省略号 */
+        }
+        .plant-item a:hover p {
+            color: #007d27;
+        }
+
+        /* 小屏幕适配 */
+        @media (max-width: 768px) {
+            .plant-item {
+                flex: 1 1 calc(50% - 20px); /* 每行显示 2 个 */
+                max-width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .plant-item {
+                flex: 1 1 100%; /* 每行显示 1 个 */
+                max-width: 100%;
+            }
+        }
+        .science-section {
+            padding: 20px;
+            background-color: #fff;
+        }
+        .science-section h2 {
+            font-size: 24px;
+            color: #007d27;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .science-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            display: inline-block; /* 保证内容在一行内 */
+            white-space: nowrap; /* 禁止换行 */
+        }
+        .science-item {
+            flex: 1 1 calc(50% - 20px);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .science-item a {
+            text-decoration: none;
+            color: #333;
+        }
+        .science-item a:hover h3 {
+            color: #007d27;
+        }
+        .science-item h3 {
+            font-size: 18px;
+            margin: 0;
+        }
+        .science-item p {
+            font-size: 14px;
+            color: #888;
+            margin: 5px 0 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>这里放图片和logo</h1>
+    </header>
+    <nav>
+        <a href="index.html">首页</a>
+        <a href="news-index.html">新闻动态</a>
+        <a href="handbook-index.html">生态图鉴</a>
+        <a href="eco-map.html">生态地图</a>
+        <a href="science-index.html">科普知识</a>
+        <a href="science-exam.html">科普竞赛</a>
+        <a href="aboutus.html">关于我们</a>
+    </nav>
+    <div class="banner">
+        <div class="slideshow-container">
+            <div class="slide fade">
+                <img src="img\icon\banner1.jpg" alt="图片1">
+                <p class="caption">这是关于第一张图片的介绍</p>
+            </div>
+            <div class="slide fade">
+                <img src="img\icon\banner2.jpg" alt="图片2">
+                <p class="caption">这是关于第二张图片的介绍</p>
+            </div>
+            <div class="slide fade">
+                <img src="img\icon\banner3.jpg" alt="图片3">
+                <p class="caption">这是关于第三张图片的介绍</p>
+            </div>
+            <!-- 左右按钮 -->
+            <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+            <a class="next" onclick="changeSlide(1)">&#10095;</a>
+        </div>
+    </div>
+    <div class="maxwidth">
+    <div class="navigation-section">
+        <h2>校园生态</h2>
+        <p>BNUZ ENVIRONMENT</p>
+        <div class="navigation-icons">
+            <div class="nav-item">
+                <a href="#news">
+                    <img src="img\icon\nav1.png" alt="校园新闻动态">
+                    <p>校园新闻动态</p>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="#plants">
+                    <img src="img\icon\nav1.png" alt="生态图鉴">
+                    <p>校园生态图鉴</p>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="#map">
+                    <img src="img\icon\nav1.png" alt="校园生态地图">
+                    <p>校园生态地图</p>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="#science">
+                    <img src="img\icon\nav1.png" alt="生态知识科普">
+                    <p>生态知识科普</p>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="#school">
+                    <img src="img\icon\nav1.png" alt="学校简介">
+                    <p>学校简介</p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="news" class="news-and-notice" style="display: flex; gap: 20px; padding: 20px;">
+        <!-- 新闻动态模块 -->
+        <div class="news-section" style="flex: 2;">
+            <h2>新闻动态</h2>
+            <div class="news-list">
+                <div class="news-item">
+                    <a href="news-detail1.html">
+                        <h3>校园生态研学周结束</h3>
+                        <p>2025年4月20日</p>
+                    </a>
+                </div>
+                <div class="news-item">
+                    <a href="news-detail2.html">
+                        <h3>校园生态图书馆正式启用</h3>
+                        <p>2025年4月18日</p>
+                    </a>
+                </div>
+                <div class="news-item">
+                    <a href="news-detail3.html">
+                        <h3>生态合作项目签约仪式成功举办</h3>
+                        <p>2025年4月15日</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 校园通知模块 -->
+        <div class="notice-section" style="flex: 1;">
+            <h2>活动通知</h2>
+            <ul class="notice-list">
+                <li class="notice-item">
+                    <a href="notice-detail1.html">
+                        <h3>校园生态活动通知</h3>
+                        <p>2025年4月19日</p>
+                    </a>
+                </li>
+                <li class="notice-item">
+                    <a href="notice-detail2.html">
+                        <h3>校园生态活动通知</h3>
+                        <p>2025年4月17日</p>
+                    </a>
+                </li>
+                <li class="notice-item">
+                    <a href="notice-detail3.html">
+                        <h3>校园生态活动通知</h3>
+                        <p>2025年4月16日</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div  id="plants" class="plants-gallery">
+        <div class="plants-container">
+            <div class="plant-item">
+                <img src="img\icon\banner1.jpg" alt="植物1">
+                <p>植物1：描述植物的特点和信息。</p>
+            </div>
+            <div class="plant-item">
+                <img src="img\icon\banner1.jpg" alt="植物2">
+                <p>植物2：描述植物的特点和信息。</p>
+            </div>
+            <div class="plant-item">
+                <img src="img\icon\banner1.jpg" alt="植物3">
+                <p>植物3：描述植物的特点和信息。</p>
+            </div>
+            <div class="plant-item">
+                <img src="img\icon\banner1.jpg" alt="植物4">
+                <p>植物4：描述植物的特点和信息。</p>
+            </div>
+            <div class="plant-item">
+                <img src="img\icon\banner1.jpg" alt="植物5">
+                <p>植物5：描述植物的特点和信息。</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="map" class="map-feature-section" style="display: flex; align-items: stretch; background-color: #4CAF50; color: white; padding: 20px;  margin-bottom: 30px; margin-top: 20px;">
+        <!-- 左侧图片 -->
+        <div style="flex: 2; display: flex; justify-content: center; align-items: center;">
+            <img src="img\icon\banner1.jpg" alt="地图功能图片" style="width: 600px; height: 268px; border-radius: 10px;">
+        </div>
+        <!-- 右侧功能介绍 -->
+        <div style="white-space: normal; flex: 3; padding: 20px; display: flex; flex-direction: column; justify-content: center;">
+            <h2 style="margin-bottom: 20px;">地图查询功能</h2>
+            <p style="line-height: 1.8; font-size: 16px;">
+                我们的地图查询功能可以帮助您快速定位校园内的建筑、设施和景点。通过高德地图的集成，您可以轻松查找路径、了解周边环境，并规划您的校园活动。
+            </p>
+            <p style="line-height: 1.8; font-size: 16px;">
+                如果您需要进一步的帮助或有任何建议，请随时联系我们的技术支持团队。
+            </p>
+            <a href="#" style="width: 95px; display: inline-block; padding: 10px 20px; background-color: white; color: #007d27; text-decoration: none; border-radius: 5px; font-weight: bold;">查看更多 >></a>
+        </div>
+    </div>
+    <div  id="science" class="science-and-quiz" style="display: flex; gap: 20px; padding: 20px;">
+        <!-- 科普知识模块 -->
+        <div class="science-section" style="flex: 2;">
+            
+            <div class="science-list" style="display: flex; flex-wrap: wrap; gap: 20px;">
+                <div class="science-item" style="flex: 1 1 calc(50% - 20px); display: flex; gap: 15px; align-items: center;">
+                    <img src="img\icon\banner1.jpg" alt="科普知识1" style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px;">
+                    <div>
+                        <a href="science-detail1.html">
+                            <h3>植物如何进行光合作用？</h3>
+                            <p>2025年5月10日</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="science-item" style="flex: 1 1 calc(50% - 20px); display: flex; gap: 15px; align-items: center;">
+                    <img src="img\icon\banner1.jpg" alt="科普知识2" style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px;">
+                    <div>
+                        <a href="science-detail2.html">
+                            <h3>校园内的珍稀植物有哪些</h3>
+                            <p>2025年5月8日</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="science-item" style="flex: 1 1 calc(50% - 20px); display: flex; gap: 15px; align-items: center;">
+                    <img src="img\icon\banner1.jpg" alt="科普知识3" style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px;">
+                    <div>
+                        <a href="science-detail3.html">
+                            <h3>生态系统的平衡与保护</h3>
+                            <p>2025年5月5日</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="science-item" style="flex: 1 1 calc(50% - 20px); display: flex; gap: 15px; align-items: center;">
+                    <img src="img\icon\banner1.jpg" alt="科普知识4" style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px;">
+                    <div>
+                        <a href="science-detail4.html">
+                            <h3>如何保护校园植物的多样性</h3>
+                            <p>2025年5月3日</p>
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- 科普答题模块 -->
+        <div class="quiz-section" style="flex: 1; background-color: #fff;  padding: 20px; position: relative;">
+            <h2>每日问答</h2>
+            <p id="quiz-question" style="font-size: 16px; margin-bottom: 15px;">植物进行光合作用需要什么条件？</p>
+            <div id="quiz-options" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button onclick="checkAnswer(this, true)" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f5f5f5; cursor: pointer;">A. 阳光</button>
+                <button onclick="checkAnswer(this, false)" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f5f5f5; cursor: pointer;">B. 月光</button>
+                <button onclick="checkAnswer(this, false)" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f5f5f5; cursor: pointer;">C. 风</button>
+                <button onclick="checkAnswer(this, false)" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f5f5f5; cursor: pointer;">D. 雨</button>
+            </div>
+            <p id="quiz-result" style="margin-top: 15px; font-size: 16px; font-weight: bold;"></p>
+            <div style="position: absolute; bottom: 20px; right: 20px; text-align: right; display: flex; align-items: center; gap: 10px;">
+                <p style="font-size: 14px; margin: 0;">如果你准备好了，来参加科普答题吧！</p>
+                <a href="science-exam.html" style="display: inline-block; padding: 8px 15px; background-color: #007d27; color: white; text-decoration: none; border-radius: 5px; font-size: 14px;">立即报名</a>
+            </div>
+        </div>
+    </div>
+    <div id="school" class="extra-content" style="display: flex; align-items: stretch; height: 213px; padding-bottom: 40px;">
+        <div class="extra-section" style="flex: 2; background-color: #007d27; padding: 0;">
+            <img src="img\icon\Banner_about.jpg" alt="校园图片" style="width: 100%; height: 213px; border-radius: 10px; object-fit: cover;">
+        </div>
+        <div class="extra-section" style="background-color: #f5f5f5; flex: 1; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; ">
+            <h2 style="margin: 0 7px 10px;">学校简介</h2>
+            <p style="margin: 5px 7px;">地址：湖北省武汉市洪山区狮子山街1号</p>
+            <p style="margin: 5px 7px;">邮编：430070</p>
+            <p style="margin: 5px 7px;">电话：027-87282027</p>
+            <p style="margin: 5px 7px;">校长信箱：hzauo@mail.hzau.edu.cn</p>
+            <a style="margin: 5px 7px;" href="https://www.hzau.edu.cn/" class="more-link" style="margin-top: 10px;">查看更多</a>
+        </div>
+    </div>
+
+    
+    </div>
+    <footer>
+        <p>版权所有 © 2025 校园主页</p>
+    </footer>
+    <script>
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function showSlides() {
+            slides.forEach(slide => slide.style.display = 'none');
+            slideIndex++;
+            if (slideIndex > slides.length) { slideIndex = 1; }
+            slides[slideIndex - 1].style.display = 'block';
+        }
+
+        function changeSlide(n) {
+            slideIndex += n;
+            if (slideIndex > slides.length) { slideIndex = 1; }
+            if (slideIndex < 1) { slideIndex = slides.length; }
+            slides.forEach(slide => slide.style.display = 'none');
+            slides[slideIndex - 1].style.display = 'block';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showSlides();
+            setInterval(() => changeSlide(1), 5000); // 每5秒自动切换
+        });
+
+        function checkAnswer(button, isCorrect) {
+            const result = document.getElementById('quiz-result');
+            if (isCorrect) {
+                result.textContent = '答对了！真聪明！';
+                result.style.color = 'green';
+            } else {
+                result.textContent = '答错了，再想想！';
+                result.style.color = 'red';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const newsList = document.querySelector('.news-list');
+
+            // 加载新闻数据
+            fetch('json/news-data.json')
+                .then(response => response.json())
+                .then(data => {
+                    // 清空现有的新闻列表
+                    newsList.innerHTML = '';
+
+                    // 只处理前三条新闻
+                    data.slice(0, 4).forEach(news => {
+                        const newsItem = document.createElement('div');
+                        newsItem.className = 'news-item';
+                        newsItem.innerHTML = `
+                            <a href="news-detail.html?id=${news.id}">
+                                <h3>${news.title}</h3>
+                                <p>${news.date}</p>
+                            </a>
+                        `;
+                        newsList.appendChild(newsItem);
+                    });
+                })
+                .catch(error => console.error('加载新闻数据失败:', error));
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const noticeList = document.querySelector('.notice-list');
+
+            // 加载活动通知数据
+            fetch('json/activities-data.json')
+                .then(response => response.json())
+                .then(data => {
+                    // 清空现有的通知列表
+                    noticeList.innerHTML = '';
+
+                    // 只处理前三条通知
+                    data.slice(0, 4).forEach(activity => {
+                        const noticeItem = document.createElement('li');
+                        noticeItem.className = 'notice-item';
+                        noticeItem.innerHTML = `
+                            <a href="activities-detail.html?id=${activity.id}">
+                                <h3>${activity.title}</h3>
+                                <p>${activity.date}</p>
+                            </a>
+                        `;
+                        noticeList.appendChild(noticeItem);
+                    });
+                })
+                .catch(error => console.error('加载活动通知数据失败:', error));
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const plantsContainer = document.querySelector('.plants-container');
+
+            // 加载植物数据
+            fetch('json/plants-data.json')
+                .then(response => response.json())
+                .then(data => {
+                    // 清空现有内容
+                    plantsContainer.innerHTML = '';
+
+                    // 只显示前 5 个植物
+                    data.slice(0, 5).forEach(plant => {
+                        const plantItem = document.createElement('div');
+                        plantItem.className = 'plant-item';
+                        plantItem.innerHTML = `
+                            <a href="handbook-detail.html?name=${encodeURIComponent(plant.name)}" style="text-decoration: none; color: inherit;">
+                                <img src="${plant.image_url}" alt="${plant.name}">
+                                <p>${plant.name}</p>
+                            </a>
+                        `;
+                        plantsContainer.appendChild(plantItem);
+                    });
+                })
+                .catch(error => console.error('加载植物数据失败:', error));
+        });
+    </script>
+    
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const scienceList = document.querySelector('.science-list');
+
+        // 加载科普知识数据
+        fetch('json/science-data.json')
+            .then(response => response.json())
+            .then(data => {
+                // 清空现有内容
+                scienceList.innerHTML = '';
+
+                // 只显示前 4 条科普知识
+                data.slice(0, 4).forEach(item => {
+                    const scienceItem = document.createElement('div');
+                    scienceItem.className = 'science-item';
+                    scienceItem.style.cssText = `
+                        flex: 1 1 calc(50% - 20px);
+                        display: flex;
+                        gap: 15px;
+                        align-items: center;
+                    `;
+                    scienceItem.innerHTML = `
+                        <img src="${item.image_url}" alt="${item.title}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px;">
+                        <div>
+                            <a href="science-detail.html?title=${encodeURIComponent(item.title)}" style="text-decoration: none; color: inherit;">
+                                <h3 style="font-size: 18px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.title}</h3>
+                                <p style="font-size: 14px; color: #888; margin: 5px 0 0;">${item.date}</p>
+                            </a>
+                        </div>
+                    `;
+                    scienceList.appendChild(scienceItem);
+                });
+            })
+            .catch(error => console.error('加载科普知识数据失败:', error));
+    });
+</script>
+</body>
+</html>

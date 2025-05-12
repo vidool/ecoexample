@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="initial-scale=1.0, user-scalable=no, width=device-width"
+    />
+    <title>HELLO，AMAP!</title>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #container {
+        position: absolute;
+        top: 0;
+        left: 200px; /* 让地图从侧边栏右侧开始 */
+        width: calc(100% - 200px); /* 减去侧边栏的宽度 */
+        height: 100%;
+      }
+      #sidebar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200px;
+        height: 100%;
+        background: #f8f9fa;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+      #sidebar button {
+        width: 90%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        margin-bottom: 10px;
+      }
+      #sidebar button:hover {
+        background-color: #0056b3;
+      }
+      #form-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        z-index: 2000;
+        display: none; /* 默认隐藏 */
+        width: 300px; /* 设置固定宽度 */
+        max-width: 90%; /* 确保在小屏幕上不会超出视口 */
+      }
+      #form-container input {
+        margin-bottom: 10px;
+        width: 100%;
+        padding: 5px;
+        box-sizing: border-box;
+      }
+      #form-container .form-group {
+        display: flex; /* 使用 Flexbox 布局 */
+        align-items: center; /* 垂直居中对齐 */
+        gap: 3px; /* 控制子元素之间的间距 */
+        margin-bottom: 10px;
+      }
+      #form-container .form-group input {
+        margin-bottom: 1px;
+      }
+
+      #form-container .form-group img {
+        width: 20px;
+        height: 20px;
+      }
+
+      #form-container .form-group label {
+        white-space: nowrap; /* 防止文字换行 */
+      }
+
+      #form-container .button-group {
+        display: flex;
+        justify-content: center; /* 按钮居中对齐 */
+        gap: 10px; /* 按钮之间的间距 */
+      }
+
+      #form-container button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      #form-container button:hover {
+        background-color: #0056b3;
+      }
+
+      #plant-form-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        z-index: 2000;
+        width: 300px;
+        max-width: 90%;
+      }
+
+      #plant-form-container input,
+      #plant-form-container textarea {
+        margin-bottom: 10px;
+        width: 100%;
+        padding: 5px;
+        box-sizing: border-box;
+      }
+
+      #plant-form-container .form-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+      #plant-form-container .form-group input {
+        margin-bottom: 1px;
+      }
+
+      #plant-form-container .form-group img {
+        width: 20px;
+        height: 20px;
+      }
+
+      #plant-form-container .form-group label {
+        white-space: nowrap;
+      }
+
+      #plant-form-container .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      #plant-form-container button {
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      #plant-form-container button:hover {
+        background-color: #218838;
+      }
+    </style>
+    <script type="text/javascript">
+      window._AMapSecurityConfig = {
+        securityJsCode: "b4a06cf870b3f069cf485c34f6d2bec9",
+      };
+    </script>
+    <script
+      type="text/javascript"
+      src="https://webapi.amap.com/maps?v=2.0&key=746c8321e198288dd1a89730f34f39e1"
+    ></script>
+  </head>
+  <body>
+    <div id="sidebar">
+      <!-- Logo -->
+      <div id="logo-container" style="text-align: center; margin-bottom: 20px;">
+        <a href="index.html" style="display: inline-block;">
+          <img src="img\icon\logo.jpg" alt="Logo" style="width: 100px; height: auto; border-radius: 50%;" />
+        </a>
+      </div>
+
+      <!-- 天气信息 -->
+      <div id="weather-container" style="margin-bottom: 20px; padding: 10px; background: #e9ecef; border-radius: 5px;">
+        <h4 style="margin: 0 0 10px;">天气信息</h4>
+        <img id="weather-icon" src="" alt="天气图标" style="display: none; width: 50px; height: 50px; margin-bottom: 10px;" />
+        <p id="weather-info" style="margin: 0;">加载中...</p>
+      </div>
+
+      <!-- 搜索功能 -->
+      <div id="search-container" style="margin-bottom: 20px; padding: 10px; background: #e9ecef; border-radius: 5px;">
+        <h4 style="margin: 0 0 10px;">搜索校内地点</h4>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="请输入关键字"
+          style="width: 100%; padding: 5px; margin-bottom: 10px; box-sizing: border-box;"
+        />
+        <button id="search-button" style="width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;">
+          搜索
+        </button>
+      </div>
+
+      <!-- 新增猫咪 -->
+      <button id="open-form" style="margin-bottom: 10px;margin-left: 10px;background-color: #fea100;">猫咪登记</button>
+
+      <!-- 新增植物 -->
+      <button id="open-plant-form" style="margin-left: 10px;background-color: #10b536;">植物登记</button>
+    </div>
+    <div id="container"></div>
+    <div id="form-container">
+      <h4 style="text-align: center; margin-bottom: 20px;">猫咪登记</h4>
+      <input type="text" id="cat-name" placeholder="猫咪名字" />
+      <input type="number" id="cat-age" placeholder="猫咪年龄" />
+      <input type="text" id="cat-color" placeholder="猫咪颜色" />
+      <input type="number" id="cat-lng" placeholder="经度/请左键点击地图获取" title="请输入有效的经度值，例如：114.356941" />
+      <input type="number" id="cat-lat" placeholder="纬度/请左键点击地图获取" title="请输入有效的纬度值，例如：30.476273" />
+      <div class="form-group">
+        <img src="img\icon\猫猫.png" alt="猫猫" />
+        <label for="cat-avatar">上传照片：</label>
+        <input type="file" id="cat-avatar" accept="image/*" />
+      </div>
+      <div style="text-align: center;"> 
+        <button id="add-cat">猫咪登记</button>
+        <button id="close-form">取消</button>
+      </div>
+    </div>
+    <div id="plant-form-container" style="display: none;">
+      <h4 style="text-align: center; margin-bottom: 20px;">植物登记</h4>
+      <input type="text" id="plant-name" placeholder="植物名称" />
+      <textarea id="plant-notes" placeholder="备注：请根据植物的形态特征进行描述" style="width: 100%; height: 60px; margin-bottom: 10px;"></textarea>
+      <input type="number" id="plant-lng" placeholder="经度/请左键点击地图获取" title="请输入有效的经度值，例如：114.356941" />
+      <input type="number" id="plant-lat" placeholder="纬度/请左键点击地图获取" title="请输入有效的纬度值，例如：30.476273" />
+      <div class="form-group">
+        <img src="img\icon\树叶.png" alt="植物" />
+        <label for="plant-avatar">上传照片：</label>
+        <input type="file" id="plant-avatar" accept="image/*" />
+      </div>
+      <div class="button-group">
+        <button id="add-plant">植物登记</button>
+        <button id="close-plant-form">取消</button>
+      </div>
+    </div>
+    <script>
+      // 初始化地图
+      var map = new AMap.Map("container", {
+        resizeEnable: true,
+        zoom: 16,
+        center: [114.357928, 30.473823],
+        viewMode: "3D",
+      });
+
+      // 设置学校的边界范围（以武汉大学为例）
+      const schoolBounds = new AMap.Bounds(
+        [114.335393, 30.463748], // 西南角经纬度
+        [114.373113, 30.483287]  // 东北角经纬度
+      );
+
+      // 添加工具条控件
+      AMap.plugin("AMap.ToolBar", function () {
+        var toolbar = new AMap.ToolBar({
+          position: { top: "10px", left: "10px" }, // 设置工具条的位置
+        });
+        map.addControl(toolbar); // 添加控件
+      });
+
+      // 添加比例尺控件
+      AMap.plugin("AMap.Scale", function () {
+        var scale = new AMap.Scale();
+        map.addControl(scale); // 添加控件
+      });
+
+      // 添加定位控件
+      AMap.plugin("AMap.Geolocation", function () {
+        var geolocation = new AMap.Geolocation({
+          position: { top: "50px", right: "10px" }, // 设置定位控件的位置
+        });
+        map.addControl(geolocation); // 添加控件
+      });
+
+      // 加载天气插件
+      AMap.plugin('AMap.Weather', function () {
+        const weather = new AMap.Weather();
+
+        // 获取实时天气信息
+        weather.getLive('武汉', function (err, data) {
+          if (!err) {
+            // 映射天气状况到图片文件名
+            const weatherIcons = {
+              "晴": "晴天.png",
+              "多云": "多云.png",
+              "阴": "img/icon/阴天.png",
+              "小雨": "小雨.png",
+              "中雨": "中雨.png",
+              "大雨": "大雨.png",
+              "雷阵雨": "雷阵雨.png",
+              "雪": "雪天.png"
+            };
+
+            // 获取对应的图片文件名
+            const weatherImage = weatherIcons[data.weather] || "未知天气.png";
+
+            // 更新天气信息
+            const weatherInfo = `
+              城市：${data.city}<br>
+              天气：${data.weather}<br>
+              温度：${data.temperature}℃
+            `;
+            document.getElementById('weather-info').innerHTML = weatherInfo;
+
+            // 更新天气图片
+            const weatherIcon = document.getElementById('weather-icon');
+            weatherIcon.src = `./img/icon/${weatherImage}`; // 假设图片在当前目录下
+            weatherIcon.style.display = "block"; // 显示图片
+          } else {
+            document.getElementById('weather-info').innerHTML = '天气信息加载失败';
+            console.error('天气信息加载失败：', err);
+          }
+        });
+      });
+
+      // 加载 PlaceSearch 插件
+      AMap.plugin('AMap.PlaceSearch', function () {
+        const placeSearch = new AMap.PlaceSearch({
+          map: map, // 绑定地图实例
+          city: "武汉", // 设置城市范围
+          pageSize: 10, // 每页显示的结果数量
+        });
+
+        document.getElementById("search-button").addEventListener("click", () => {
+          const keyword = document.getElementById("search-input").value.trim();
+
+          if (!keyword) {
+            alert("请输入搜索关键字！");
+            return;
+          }
+
+          // 执行关键字搜索，限制在学校范围内
+          placeSearch.searchInBounds(keyword, schoolBounds, function (status, result) {
+            if (status === 'complete' && result.info === 'OK' && result.poiList.pois.length > 0) {
+              console.log("搜索结果：", result);
+            } else if (status === 'no_data' || !result.poiList || result.poiList.pois.length === 0) {
+              alert("未找到相关结果，请尝试其他关键字！");
+            } else {
+              alert("搜索失败，请稍后重试！");
+              console.error("搜索失败：", result);
+            }
+          });
+        });
+      });
+
+      // 预制猫咪和植物数据
+      const initialCats = [
+        { name: "小黑", age: 2, color: "黑色", lng: 114.349730, lat: 30.476369, avatar: "img/cat/examplecat.png" },
+        { name: "小白白", age: 1, color: "白色", lng: 114.353856, lat: 30.473222, avatar: "img/cat/examplecat.png" },
+        { name: "小橘", age: 3, color: "橘色", lng: 114.360422, lat: 30.473518, avatar: "img/cat/examplecat.png" },
+      ];
+
+      const initialPlants = [
+        { name: "樱花树", notes: "春天开花", lng: 114.359941, lat: 30.479273, avatar: "img/plant/exampleplant.jpg" },
+        { name: "松树", notes: "四季常青", lng: 114.367294, lat: 30.475810, avatar: "img/plant/exampleplant.jpg" },
+        { name: "枫树", notes: "秋天叶子变红", lng: 114.345601, lat: 30.472130, avatar: "img/plant/exampleplant.jpg" },
+      ];
+
+      // 保存预制数据到 localStorage
+      if (!localStorage.getItem("catPositions")) {
+        localStorage.setItem("catPositions", JSON.stringify(initialCats));
+      }
+      if (!localStorage.getItem("plantPositions")) {
+        localStorage.setItem("plantPositions", JSON.stringify(initialPlants));
+      }
+
+      // 从 localStorage 加载猫咪和植物数据
+      const savedCats = JSON.parse(localStorage.getItem("catPositions")) || [];
+      const savedPlants = JSON.parse(localStorage.getItem("plantPositions")) || [];
+
+      // 添加猫咪标记到地图
+      savedCats.forEach(addCatMarker);
+
+      // 添加植物标记到地图
+      savedPlants.forEach(addPlantMarker);
+
+      // 添加一个猫咪标记的函数
+      function addCatMarker(cat) {
+        const marker = new AMap.Marker({
+          position: new AMap.LngLat(cat.lng, cat.lat),
+          title: cat.name,
+          map: map,
+          content: `<div style="
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              overflow: hidden;
+              background: url('${cat.avatar || 'img/cat/examplecat.png'}') no-repeat center center;
+              background-size: cover;
+            ">
+            </div>`,
+        });
+
+        // 创建信息窗口
+        const infoWindow = new AMap.InfoWindow({
+          content: `<div style="font-size: 14px; line-height: 20px;">
+                      <strong>${cat.name}</strong><br>
+                      年龄：${cat.age || "未知"}<br>
+                      颜色：${cat.color || "未知"}
+                    </div>`,
+          offset: new AMap.Pixel(20, -20),
+        });
+
+        // 点击标记显示信息窗口
+        marker.on("click", () => {
+          infoWindow.open(map, marker.getPosition());
+        });
+      }
+
+      // 地图点击事件：显示经纬度信息并支持植物登记
+      map.on("click", function (e) {
+        const lngLat = e.lnglat; // 获取点击位置的经纬度
+
+        // 创建信息窗口内容，包含一个按钮
+        const infoWindowContent = `
+          <div style="font-size: 14px; line-height: 20px;">
+            <strong>点击位置</strong><br>
+            经度：${lngLat.lng.toFixed(6)}<br>
+            纬度：${lngLat.lat.toFixed(6)}<br>
+            <button id="add-cat-from-map" style="
+              margin-top: 10px;
+              padding: 5px 10px;
+              background-color: #007bff;
+              color: white;
+              border: none;
+              border-radius: 3px;
+              cursor: pointer;
+            ">猫咪登记</button>
+            <button id="add-plant-from-map" style="
+              margin-top: 10px;
+              padding: 5px 10px;
+              background-color: #28a745;
+              color: white;
+              border: none;
+              border-radius: 3px;
+              cursor: pointer;
+            ">植物登记</button>
+          </div>
+        `;
+
+        const infoWindow = new AMap.InfoWindow({
+          content: infoWindowContent,
+          offset: new AMap.Pixel(0, 0), // 信息窗口偏移
+        });
+
+        // 打开信息窗口
+        infoWindow.open(map, lngLat);
+
+        // 等待 DOM 渲染完成后绑定按钮点击事件
+        setTimeout(() => {
+          document.getElementById("add-cat-from-map").addEventListener("click", () => {
+            // 打开新增猫咪窗口
+            document.getElementById("form-container").style.display = "block";
+
+            // 自动填入经纬度
+            document.getElementById("cat-lng").value = lngLat.lng.toFixed(6);
+            document.getElementById("cat-lat").value = lngLat.lat.toFixed(6);
+
+            // 关闭信息窗口
+            infoWindow.close();
+          });
+
+          document.getElementById("add-plant-from-map").addEventListener("click", () => {
+            // 打开新增植物窗口
+            document.getElementById("plant-form-container").style.display = "block";
+
+            // 自动填入经纬度
+            document.getElementById("plant-lng").value = lngLat.lng.toFixed(6);
+            document.getElementById("plant-lat").value = lngLat.lat.toFixed(6);
+
+            // 关闭信息窗口
+            infoWindow.close();
+          });
+        }, 0);
+      });
+
+      // 打开新增猫咪窗口
+      document.getElementById("open-form").addEventListener("click", () => {
+        document.getElementById("form-container").style.display = "block";
+      });
+
+      // 关闭新增猫咪窗口
+      document.getElementById("close-form").addEventListener("click", () => {
+        document.getElementById("form-container").style.display = "none";
+      });
+
+      // 监听表单提交事件
+      document.getElementById("add-cat").addEventListener("click", () => {
+        const name = document.getElementById("cat-name").value;
+        const age = document.getElementById("cat-age").value;
+        const color = document.getElementById("cat-color").value;
+        const lng = parseFloat(document.getElementById("cat-lng").value);
+        const lat = parseFloat(document.getElementById("cat-lat").value);
+        const avatarInput = document.getElementById("cat-avatar");
+
+        if (!name || isNaN(lng) || isNaN(lat)) {
+          alert("请填写完整的猫咪信息！");
+          return;
+        }
+
+        // 如果用户上传了图片，读取图片的 Base64 数据
+        let avatar = null;
+        if (avatarInput.files && avatarInput.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            avatar = e.target.result;
+
+            // 创建猫咪对象
+            const newCat = { name, age, color, lng, lat, avatar };
+
+            // 添加标记到地图
+            addCatMarker(newCat);
+
+            // 将地图中心移动到新添加的猫咪位置
+            map.setCenter([lng, lat]);
+
+            // 保存到 localStorage
+            savedCats.push(newCat);
+            localStorage.setItem("catPositions", JSON.stringify(savedCats));
+
+            // 清空表单并关闭窗口
+            resetForm();
+          };
+          reader.readAsDataURL(avatarInput.files[0]);
+        } else {
+          // 如果没有上传图片，使用默认图片
+          const newCat = { name, age, color, lng, lat, avatar: 'img/cat/examplecat.png' };
+
+          // 添加标记到地图
+          addCatMarker(newCat);
+
+          // 将地图中心移动到新添加的猫咪位置
+          map.setCenter([lng, lat]);
+
+          // 保存到 localStorage
+          savedCats.push(newCat);
+          localStorage.setItem("catPositions", JSON.stringify(savedCats));
+
+          // 清空表单并关闭窗口
+          resetForm();
+        }
+      });
+
+      // 清空表单并关闭窗口
+      function resetForm() {
+        document.getElementById("cat-name").value = "";
+        document.getElementById("cat-age").value = "";
+        document.getElementById("cat-color").value = "";
+        document.getElementById("cat-lng").value = "";
+        document.getElementById("cat-lat").value = "";
+        document.getElementById("cat-avatar").value = "";
+        document.getElementById("form-container").style.display = "none";
+      }
+
+      // 打开植物登记窗口
+      document.getElementById("open-plant-form").addEventListener("click", () => {
+        document.getElementById("plant-form-container").style.display = "block";
+      });
+
+      // 关闭植物登记窗口
+      document.getElementById("close-plant-form").addEventListener("click", () => {
+        document.getElementById("plant-form-container").style.display = "none";
+      });
+
+      // 监听植物登记表单提交事件
+      document.getElementById("add-plant").addEventListener("click", () => {
+        const name = document.getElementById("plant-name").value;
+        const notes = document.getElementById("plant-notes").value;
+        const lng = parseFloat(document.getElementById("plant-lng").value);
+        const lat = parseFloat(document.getElementById("plant-lat").value);
+        const avatarInput = document.getElementById("plant-avatar");
+
+        if (!name || isNaN(lng) || isNaN(lat)) {
+          alert("请填写完整的植物信息！");
+          return;
+        }
+
+        // 如果用户上传了图片，读取图片的 Base64 数据
+        let avatar = null;
+        if (avatarInput.files && avatarInput.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            avatar = e.target.result;
+
+            // 创建植物对象
+            const newPlant = { name, notes, lng, lat, avatar };
+
+            // 添加植物标记到地图
+            addPlantMarker(newPlant);
+
+            // 保存到 localStorage
+            savedPlants.push(newPlant);
+            localStorage.setItem("plantPositions", JSON.stringify(savedPlants));
+
+            // 清空表单并关闭窗口
+            resetPlantForm();
+          };
+          reader.readAsDataURL(avatarInput.files[0]);
+        } else {
+          // 如果没有上传图片，使用默认图片 plant1.png
+          const newPlant = { name, notes, lng, lat, avatar: 'img/plant/exampleplant.jpg' };
+
+          // 添加植物标记到地图
+          addPlantMarker(newPlant);
+
+          // 保存到 localStorage
+          savedPlants.push(newPlant);
+          localStorage.setItem("plantPositions", JSON.stringify(savedPlants));
+
+          // 清空表单并关闭窗口
+          resetPlantForm();
+        }
+      });
+
+      // 添加植物标记到地图
+      function addPlantMarker(plant) {
+        const marker = new AMap.Marker({
+          position: new AMap.LngLat(plant.lng, plant.lat), // 使用植物的经纬度
+          title: plant.name,
+          map: map,
+          content: `<div style="
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              overflow: hidden;
+              background: url('${plant.avatar}') no-repeat center center;
+              background-size: cover;
+            ">
+            </div>`,
+        });
+
+        // 创建信息窗口
+        const infoWindow = new AMap.InfoWindow({
+          content: `<div style="font-size: 14px; line-height: 20px; word-wrap: break-word; word-break: break-word; max-width: 200px;">
+                      <strong>${plant.name}</strong><br>
+                      备注：${plant.notes || "无"}
+                    </div>`,
+          offset: new AMap.Pixel(20, -20),
+        });
+
+        // 点击标记显示信息窗口
+        marker.on("click", () => {
+          infoWindow.open(map, marker.getPosition());
+        });
+      }
+
+      // 清空植物登记表单并关闭窗口
+      function resetPlantForm() {
+        document.getElementById("plant-name").value = "";
+        document.getElementById("plant-notes").value = "";
+        document.getElementById("plant-lng").value = "";
+        document.getElementById("plant-lat").value = "";
+        document.getElementById("plant-avatar").value = "";
+        document.getElementById("plant-form-container").style.display = "none";
+      }
+
+      // 监听经纬度输入框的变化
+      document.getElementById("plant-lng").addEventListener("input", updateMapPosition);
+      document.getElementById("plant-lat").addEventListener("input", updateMapPosition);
+
+      function updateMapPosition() {
+        const lng = parseFloat(document.getElementById("plant-lng").value);
+        const lat = parseFloat(document.getElementById("plant-lat").value);
+
+        if (!isNaN(lng) && !isNaN(lat)) {
+          map.setCenter([lng, lat]); // 更新地图中心到输入的经纬度
+        }
+      }
+
+      // 监听猫咪经纬度输入框的变化
+      document.getElementById("cat-lng").addEventListener("input", updateCatMapPosition);
+      document.getElementById("cat-lat").addEventListener("input", updateCatMapPosition);
+
+      function updateCatMapPosition() {
+        const lng = parseFloat(document.getElementById("cat-lng").value);
+        const lat = parseFloat(document.getElementById("cat-lat").value);
+
+        if (!isNaN(lng) && !isNaN(lat)) {
+          map.setCenter([lng, lat]); // 更新地图中心到输入的经纬度
+        }
+      }
+
+      
+    </script>
+  </body>
+</html>
